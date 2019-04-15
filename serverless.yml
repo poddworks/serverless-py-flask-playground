@@ -1,0 +1,56 @@
+service: flask-test # NOTE: update this with your service name
+
+package:
+  exclude:
+    - node_modules/**
+    - package-lock.json
+    - pakcage.json
+    - Dockerfile*
+    - .vscode/**
+    - __pycache__/**
+
+plugins:
+  - serverless-python-requirements
+  - serverless-wsgi
+
+custom:
+  wsgi:
+    app: index.app
+    packRequirements: false
+  pythonRequirements:
+    dockerizePip: true
+    dockerImage: 'serverless-py:v1'
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: ${opt:stage, 'debug'}
+  region: ap-northeast-1
+  deploymentBucket:
+    name: ${ssm:/infra/lambda/v1/serverless/bucket-name}
+    tags:
+      version: 0.0.0-debug
+  environment:
+    API_GATEWAY_BASE_PATH: ${self:provider.stage}
+    DATABASE_URI: '${ssm:/${self:provider.stage}/v1/database/uri}'
+    DATABASE_USER: '${ssm:/${self:provider.stage}/v1/database/user~true}'
+    DATABASE_PASSWD: '${ssm:/${self:provider.stage}/v1/database/passwd~true}'
+    DATABASE_DB_NAME: '${ssm:/${self:provider.stage}/v1/database/db-name~true}'
+  vpc:
+    securityGroupIds:
+      "Fn::Split":
+        - ","
+        - ${ssm:/infra/vpc/v1/security-group-ids}
+    subnetIds:
+      "Fn::Split":
+        - ","
+        - ${ssm:/infra/vpc/v1/subnet-ids}
+
+functions:
+  wsgi:
+    name: ${self:provider.stage}-${self:service}-wsgi
+    handler: wsgi_handler.handler
+    role: ${ssm:/infra/lambda/v1/serverless/role-for-vpc-exec}
+    events:
+      - http: ANY /
+      - http: 'ANY {proxy+}'

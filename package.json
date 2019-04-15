@@ -1,0 +1,19 @@
+{
+  "name": "flask-test",
+  "version": "0.0.0",
+  "description": "Serverless Deploy Helper for Python",
+  "main": "index.js",
+  "scripts": {
+    "sls-pack": "serverless package",
+    "sls-deploy": "serverless deploy",
+    "sls-deploy-func": "serverless deploy function --function"
+  },
+  "author": "YI-HUNG JEN",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless": "^1.40.0",
+    "serverless-domain-manager": "^3.2.1",
+    "serverless-python-requirements": "^4.3.0",
+    "serverless-wsgi": "^1.7.2"
+  }
+}

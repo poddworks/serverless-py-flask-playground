@@ -41,10 +41,12 @@ provider:
       version: 0.0.0-debug
   environment:
     API_GATEWAY_BASE_PATH: ${self:provider.stage}
+    DEPLOY_STATUS: 'development-aws'
     DATABASE_URI: '${ssm:/${self:provider.stage}/v1/database/uri}'
     DATABASE_USER: '${ssm:/${self:provider.stage}/v1/database/user~true}'
     DATABASE_PASSWD: '${ssm:/${self:provider.stage}/v1/database/passwd~true}'
     DATABASE_DB_NAME: '${ssm:/${self:provider.stage}/v1/database/db-name~true}'
+    FLASK_APP_SECRET: '${ssm:/${self:provider.stage}/v1/flask-app/secret~true}'
   vpc:
     securityGroupIds:
       "Fn::Split":

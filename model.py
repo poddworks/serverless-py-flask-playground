@@ -1,9 +1,14 @@
+import os
 from application import app
-from environment import POSTGRES_USER, POSTGRES_PW, POSTGRES_URL, POSTGRES_DB
 
 
 from flask_sqlalchemy import SQLAlchemy
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PW}@{POSTGRES_URL}/{POSTGRES_DB}"
+if os.environ.get('DEPLOY_STATUS', 'development') == 'development':
+  app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///db.sqlite3"
+else:
+  from environment import POSTGRES_USER, POSTGRES_PW, POSTGRES_URL, POSTGRES_DB
+  app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://{POSTGRES_USER}:{POSTGRES_PW}@{POSTGRES_URL}/{POSTGRES_DB}"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Let's build our SQLAlchemy database reference

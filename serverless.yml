@@ -40,7 +40,7 @@ provider:
     tags:
       version: 0.0.0-debug
   environment:
-    API_GATEWAY_BASE_PATH: ${self:provider.stage}
+    API_GATEWAY_BASE_PATH: 'api'
     DEPLOY_STATUS: 'development-aws'
     DATABASE_URI: '${ssm:/${self:provider.stage}/v1/database/uri}'
     DATABASE_USER: '${ssm:/${self:provider.stage}/v1/database/user~true}'

@@ -28,7 +28,7 @@ custom:
     packRequirements: false
   pythonRequirements:
     dockerizePip: true
-    dockerImage: 'serverless-py:v1'
+    dockerImage: 'poddworks/serverless-py:v1'
 
 provider:
   name: aws

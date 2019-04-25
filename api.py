@@ -9,16 +9,21 @@ from flask import jsonify
 
 import secrets
 import json
+import datetime
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import AES
 
 
 import environment
 
-
 @app.route("/hello", methods=['GET'])
 def hello():
   return Response(response='Hello World!', status=200, mimetype='text/plain')
+
+@app.route("/timestamp", methods=['GET'])
+def timestamp():
+  dt = datetime.datetime
+  return jsonify({'timestamp': dt.utcnow()})
 
 @app.route("/me", methods=['GET'])
 def me():

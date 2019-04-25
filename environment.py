@@ -7,7 +7,7 @@ POSTGRES_PW = os.environ.get("DATABASE_PASSWD", None)
 POSTGRES_DB = os.environ.get("DATABASE_DB_NAME", 'postgres')
 
 # cache connection settings
-REDIS_URI = os.environ.get("CACHE_URL", 'localhost')
+REDIS_URI = os.environ.get("CACHE_URI", 'localhost')
 REDIS_PORT = int(os.environ.get("CACHE_PORT", 6379))
 RESIS_DB_NAME = int(os.environ.get("CACHE_DB_NAME", 0))
 

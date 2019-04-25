@@ -1,0 +1,8 @@
+serverless:
+  services:
+    - docker:dind
+  before_script:
+    - apk add --update nodejs
+    - npm install -g serverless
+  script:
+    - npm run sls-deploy

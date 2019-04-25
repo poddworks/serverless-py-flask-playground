@@ -46,6 +46,9 @@ provider:
     DATABASE_USER: '${ssm:/${self:provider.stage}/v1/database/user~true}'
     DATABASE_PASSWD: '${ssm:/${self:provider.stage}/v1/database/passwd~true}'
     DATABASE_DB_NAME: '${ssm:/${self:provider.stage}/v1/database/db-name~true}'
+    CACHE_URI: '${ssm:/${self:provider.stage}/v1/cache/uri}'
+    CACHE_PORT: '${ssm:/${self:provider.stage}/v1/cache/port}'
+    CACHE_DB_NAME: '${ssm:/${self:provider.stage}/v1/cache/db-name~true}'
     FLASK_APP_SECRET: '${ssm:/${self:provider.stage}/v1/flask-app/secret~true}'
   vpc:
     securityGroupIds:

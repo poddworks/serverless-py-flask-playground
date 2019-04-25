@@ -1,5 +1,6 @@
 from application import app
 from model import User
+from cache import rcli as cache
 
 
 from flask import Response
@@ -10,6 +11,7 @@ from flask import jsonify
 import secrets
 import json
 import datetime
+import dateutil.parser
 from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import AES
 
@@ -18,7 +20,14 @@ import environment
 
 @app.route("/hello", methods=['GET'])
 def hello():
-  return Response(response='Hello World!', status=200, mimetype='text/plain')
+  dt = datetime.datetime
+  now = dt.utcnow()
+  lastAccessAt, _ = cache.pipeline().get('lastAccessAt').set('lastAccessAt', str(now)).execute()
+  if lastAccessAt is not None:
+    lastAccessAt = dateutil.parser.parse(lastAccessAt)
+  else:
+    lastAccessAt = now
+  return Response(response=f'Hello World, Last Seen: {lastAccessAt}, Now: {now}!', status=200, mimetype='text/plain')
 
 @app.route("/timestamp", methods=['GET'])
 def timestamp():

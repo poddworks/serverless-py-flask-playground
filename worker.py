@@ -7,6 +7,7 @@ from datetime import datetime
 
 def worker(event, context):
   """Handler for processing batch event to database ingestion"""
+  print(event)
   for record in event['Records']:
     timestamp = float(record['attributes']['SentTimestamp']) / 1000
     body = record['body']

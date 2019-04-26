@@ -1,5 +1,4 @@
 from application import app
-from model import User
 from cache import rcli as cache
 
 
@@ -36,6 +35,7 @@ def timestamp():
 
 @app.route("/me", methods=['GET'])
 def me():
+  from model import User
   result = None
   try:
     username = request.args.get('username')
@@ -81,3 +81,20 @@ def decrypt():
     return Response(response=str(err), status=500, mimetype='text/plain')
   else:
     return jsonify(result)
+
+@app.route("/entry", methods=['GET'])
+def get_entry():
+  from model import Entry
+  from sqlalchemy import desc
+  result = None
+  try:
+    result = Entry.query.order_by(desc(Entry.created_at)).limit(100).all()
+  except Exception as err:
+    return Response(response=str(err), status=500, mimetype='text/plain')
+  else:
+    if result is None:
+      return Response(response='Not-Found', status=404, mimetype='text/plain')
+  if type(result) is list:
+    return jsonify([r.as_dict() for r in result])
+  else:
+    return jsonify(result.as_dict())

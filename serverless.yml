@@ -70,4 +70,4 @@ functions:
       - http: 'ANY {proxy+}'
     warmup:
       enabled: true
-      concurrency: 1
+      concurrency: 50

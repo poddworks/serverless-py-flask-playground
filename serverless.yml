@@ -40,7 +40,6 @@ provider:
     tags:
       version: 0.0.0-debug
   environment:
-    API_GATEWAY_BASE_PATH: 'api'
     DEPLOY_STATUS: 'development-aws'
     DATABASE_URI: '${ssm:/${self:provider.stage}/v1/database/uri}'
     DATABASE_USER: '${ssm:/${self:provider.stage}/v1/database/user~true}'
@@ -49,7 +48,6 @@ provider:
     CACHE_URI: '${ssm:/${self:provider.stage}/v1/cache/uri}'
     CACHE_PORT: '${ssm:/${self:provider.stage}/v1/cache/port}'
     CACHE_DB_NAME: '${ssm:/${self:provider.stage}/v1/cache/db-name~true}'
-    FLASK_APP_SECRET: '${ssm:/${self:provider.stage}/v1/flask-app/secret~true}'
   vpc:
     securityGroupIds:
       "Fn::Split":
@@ -65,6 +63,9 @@ functions:
     name: ${self:provider.stage}-${self:service}-wsgi
     handler: wsgi_handler.handler
     role: ${ssm:/infra/lambda/v1/serverless/role-for-vpc-exec}
+    environment:
+      API_GATEWAY_BASE_PATH: 'api'
+      FLASK_APP_SECRET: '${ssm:/${self:provider.stage}/v1/flask-app/secret~true}'
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'
@@ -77,7 +78,8 @@ functions:
     handler: worker.worker
     role: ${ssm:/infra/lambda/v1/serverless/role-for-vpc-exec}
     reservedConcurrency: 5
+    timeout: 3
     events:
       - sqs:
-        arn: '${ssm:/${self:provider.stage}/v1/queue/webhook/queue-name~true}'
-        batchSize: ${ssm:/${self:provider.stage}/v1/queue/webhook/batch-size}
+          arn: '${ssm:/${self:provider.stage}/v1/queue/webhook/queue-name~true}'
+          batchSize: ${ssm:/${self:provider.stage}/v1/queue/webhook/batch-size}

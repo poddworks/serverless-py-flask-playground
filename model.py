@@ -21,7 +21,19 @@ class User(db.Model):
   email = db.Column(db.String(120), unique=True, nullable=False)
 
   def __repr__(self):
-    return F'<User {self.username}>'
+    return f'<User {self.username}>'
 
   def as_dict(self):
     return {'id': self.id, 'username': self.username, 'email': self.email}
+
+class Entry(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  created_at = db.Column(db.DateTime, nullable=False)
+  content = db.Column(db.String(512), nullable=False)
+  hash_key = db.Column(db.String(32), nullable=False)
+
+  def __repr__(self):
+    return f'<Entry {self.created_at}::{self.content.slice(64)}...>'
+
+  def as_dict(self):
+    return {'id': self.id, 'created_at': self.created_at, 'hash_key': self.hash_key, 'content': self.content}

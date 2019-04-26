@@ -71,3 +71,13 @@ functions:
     warmup:
       enabled: true
       concurrency: 50
+
+  worker:
+    name: ${self:provider.stage}-${self:service}-worker
+    handler: worker.worker
+    role: ${ssm:/infra/lambda/v1/serverless/role-for-vpc-exec}
+    reservedConcurrency: 5
+    events:
+      - sqs:
+        arn: '${ssm:/${self:provider.stage}/v1/queue/webhook/queue-name~true}'
+        batchSize: ${ssm:/${self:provider.stage}/v1/queue/webhook/batch-size}

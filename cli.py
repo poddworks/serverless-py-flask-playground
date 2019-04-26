@@ -13,3 +13,11 @@ def create_user_command(username, email):
   from model import User
   db.session.add(User(username=username, email=email))
   db.session.commit()
+
+@app.cli.command('create_entry')
+@click.option('--data', help='File to load as event data (https://docs.aws.amazon.com/lambda/latest/dg/with-sqs.html)')
+def create_entry_command(data):
+  import json
+  from worker import worker
+  with open(data, 'r') as fp:
+    worker(json.load(fp), None)

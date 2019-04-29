@@ -40,7 +40,6 @@ provider:
     tags:
       version: 0.0.0-debug
   environment:
-    FLASK_APP_SECRET: '${ssm:/${self:provider.stage}/v1/flask-app/secret~true}'
     DEPLOY_STATUS: 'development-aws'
     DATABASE_URI: '${ssm:/${self:provider.stage}/v1/database/uri}'
     DATABASE_USER: '${ssm:/${self:provider.stage}/v1/database/user~true}'
@@ -49,6 +48,8 @@ provider:
     CACHE_URI: '${ssm:/${self:provider.stage}/v1/cache/uri}'
     CACHE_PORT: '${ssm:/${self:provider.stage}/v1/cache/port}'
     CACHE_DB_NAME: '${ssm:/${self:provider.stage}/v1/cache/db-name~true}'
+    AWS_SQS_QUEUE_URI: '${ssm:/${self:provider.stage}/v1/queue/webhook/queue-endpoint~true}'
+    AWS_SQS_REGION: ${self:provider.region}
   vpc:
     securityGroupIds:
       "Fn::Split":
@@ -66,6 +67,7 @@ functions:
     role: ${ssm:/infra/lambda/v1/serverless/role-for-vpc-exec}
     environment:
       API_GATEWAY_BASE_PATH: 'api'
+      FLASK_APP_SECRET: '${ssm:/${self:provider.stage}/v1/flask-app/secret~true}'~
     reservedConcurrency: 100
     events:
       - http: ANY /

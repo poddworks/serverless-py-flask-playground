@@ -12,8 +12,8 @@ REDIS_PORT = int(os.environ.get("CACHE_PORT", 6379))
 RESIS_DB_NAME = int(os.environ.get("CACHE_DB_NAME", 0))
 
 # AWS Simple Queue Service settings
-AWS_SQS_URI = os.environ.get('AWS_SQS_QUEUE_URI')
+AWS_SQS_QUEUE_URI = os.environ.get('AWS_SQS_QUEUE_URI')
+AWS_SQS_REGION = os.environ.get('AWS_SQS_REGION')
 
 # simple app secret for encrypt and decrypt
-APP_SECRET = bytes.fromhex(os.environ.get("FLASK_APP_SECRET"))
 BLOCK_SIZE = 16 # this is the encryption block size for AES

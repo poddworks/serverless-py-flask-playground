@@ -15,7 +15,7 @@ from Crypto.Util.Padding import pad, unpad
 from Crypto.Cipher import AES
 
 
-import environment
+import environment_app as environment
 
 @app.route("/hello", methods=['GET'])
 def hello():
@@ -86,9 +86,10 @@ def get_entry():
   from model import Entry
   if request.method == 'POST':
     import boto3
-    sqs = boto3.resource('sqs')
+    sqs = boto3.client('sqs')
     try:
-      sqs.send_message(QueueUrl=environment.AWS_SQS_URI, MessageBody=request.data.slice(Entry.content.property.columns[0].type.length))
+      content = request.data[:Entry.content.property.columns[0].type.length].decode('utf-8')
+      sqs.send_message(QueueUrl=environment.AWS_SQS_QUEUE_URI, MessageBody=content)
     except Exception as err:
       return Response(response=str(err), status=500, mimetype='text/plain')
     return jsonify({'received_at': datetime.datetime.utcnow()})

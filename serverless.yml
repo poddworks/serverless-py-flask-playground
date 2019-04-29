@@ -66,6 +66,7 @@ functions:
     role: ${ssm:/infra/lambda/v1/serverless/role-for-vpc-exec}
     environment:
       API_GATEWAY_BASE_PATH: 'api'
+    reservedConcurrency: 100
     events:
       - http: ANY /
       - http: 'ANY {proxy+}'

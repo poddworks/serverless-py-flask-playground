@@ -19,8 +19,7 @@ import environment
 
 @app.route("/hello", methods=['GET'])
 def hello():
-  dt = datetime.datetime
-  now = dt.utcnow()
+  now = datetime.datetime.utcnow()
   lastAccessAt, _ = cache.pipeline().get('lastAccessAt').set('lastAccessAt', str(now)).execute()
   if lastAccessAt is not None:
     lastAccessAt = dateutil.parser.parse(lastAccessAt)
@@ -30,8 +29,8 @@ def hello():
 
 @app.route("/timestamp", methods=['GET'])
 def timestamp():
-  dt = datetime.datetime
-  return jsonify({'timestamp': dt.utcnow()})
+  now = datetime.datetime.utcnow()
+  return jsonify({'timestamp': now})
 
 @app.route("/me", methods=['GET'])
 def me():
@@ -82,9 +81,18 @@ def decrypt():
   else:
     return jsonify(result)
 
-@app.route("/entry", methods=['GET'])
+@app.route("/entry", methods=['GET', 'POST'])
 def get_entry():
   from model import Entry
+  if request.method == 'POST':
+    import boto3
+    sqs = boto3.resource('sqs')
+    try:
+      sqs.send_message(QueueUrl=environment.AWS_SQS_URI, MessageBody=request.data.slice(Entry.content.property.columns[0].type.length))
+    except Exception as err:
+      return Response(response=str(err), status=500, mimetype='text/plain')
+    return jsonify({'received_at': datetime.datetime.utcnow()})
+
   from sqlalchemy import desc
   result = None
   try:

@@ -67,7 +67,7 @@ functions:
     role: ${ssm:/infra/lambda/v1/serverless/role-for-vpc-exec}
     environment:
       API_GATEWAY_BASE_PATH: 'api'
-      FLASK_APP_SECRET: '${ssm:/${self:provider.stage}/v1/flask-app/secret~true}'~
+      FLASK_APP_SECRET: '${ssm:/${self:provider.stage}/v1/flask-app/secret~true}'
     reservedConcurrency: 100
     events:
       - http: ANY /

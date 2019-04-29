@@ -86,7 +86,7 @@ def get_entry():
   from model import Entry
   if request.method == 'POST':
     import boto3
-    sqs = boto3.client('sqs')
+    sqs = boto3.client('sqs', region_name=environment.AWS_SQS_REGION)
     try:
       content = request.data[:Entry.content.property.columns[0].type.length].decode('utf-8')
       sqs.send_message(QueueUrl=environment.AWS_SQS_QUEUE_URI, MessageBody=content)

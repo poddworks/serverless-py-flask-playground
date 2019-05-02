@@ -19,6 +19,7 @@ import environment_app as environment
 
 @app.route("/hello", methods=['GET'])
 def hello():
+  """Demonstrate how to efficiently extract redis cache data and Authorizer Context"""
   now = datetime.datetime.utcnow()
   lastAccessAt, _ = cache.pipeline().get('lastAccessAt').set('lastAccessAt', str(now)).execute()
   if lastAccessAt is not None:
@@ -29,11 +30,11 @@ def hello():
   <pre>
   Hello World!!
   - Last Seen: {lastAccessAt}
-  - Now: {now}!
+  - Now: {now}
 
   Authorization
   - Claims:
-      {json.dumps(request.environ.get('serverless.authorizer', {}))}
+      {json.dumps(request.environ.get('serverless.authorizer', environment.AUTHORIZER_DEBUG))}
   </pre>
   '''
   return Response(response=response_data, status=200, mimetype='text/html')

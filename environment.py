@@ -16,4 +16,4 @@ AWS_SQS_QUEUE_URI = os.environ.get('AWS_SQS_QUEUE_URI')
 AWS_SQS_REGION = os.environ.get('AWS_SQS_REGION')
 
 # simple app secret for encrypt and decrypt
-BLOCK_SIZE = 16 # this is the encryption block size for AES
+BLOCK_SIZE = 16  # this is the encryption block size for AES

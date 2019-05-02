@@ -25,7 +25,18 @@ def hello():
     lastAccessAt = dateutil.parser.parse(lastAccessAt)
   else:
     lastAccessAt = now
-  return Response(response=f'Hello World, Last Seen: {lastAccessAt}, Now: {now}!', status=200, mimetype='text/plain')
+  response_data = f'''
+  <pre>
+  Hello World!!
+  - Last Seen: {lastAccessAt}
+  - Now: {now}!
+
+  Authorization
+  - Claims:
+      {json.dumps(request.environ.get('serverless.authorizer', {}))}
+  </pre>
+  '''
+  return Response(response=response_data, status=200, mimetype='text/html')
 
 @app.route("/timestamp", methods=['GET'])
 def timestamp():

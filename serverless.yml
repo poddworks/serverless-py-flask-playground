@@ -61,6 +61,15 @@ provider:
         - ${ssm:/infra/vpc/v1/subnet-ids}
 
 functions:
+  auth:
+    name: ${self:provider.stage}-${self:service}-auth
+    handler: worker.auth
+    role: ${ssm:/infra/lambda/v1/serverless/role-for-vpc-exec}
+    reservedConcurrency: 100
+    warmup:
+      enabled: true
+      concurrency: 50
+
   wsgi:
     name: ${self:provider.stage}-${self:service}-wsgi
     handler: wsgi_handler.handler
@@ -71,7 +80,12 @@ functions:
     reservedConcurrency: 100
     events:
       - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http:
+          path: '{proxy+}'
+          method: ANY
+          authorizer:
+            name: auth
+            resultTtlInSeconds: 3
     warmup:
       enabled: true
       concurrency: 50

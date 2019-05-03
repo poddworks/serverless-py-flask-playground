@@ -68,7 +68,7 @@ functions:
     reservedConcurrency: 100
     warmup:
       enabled: true
-      concurrency: 50
+      concurrency: 1
 
   wsgi:
     name: ${self:provider.stage}-${self:service}-wsgi
@@ -88,7 +88,7 @@ functions:
             resultTtlInSeconds: 3
     warmup:
       enabled: true
-      concurrency: 50
+      concurrency: 1
 
   worker:
     name: ${self:provider.stage}-${self:service}-worker
